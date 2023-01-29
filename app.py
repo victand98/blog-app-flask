@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, LoginForm
 
@@ -80,6 +80,30 @@ def login():
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+
+with app.app_context():
+    db.create_all()
+    db.drop_all()
+    db.create_all()
+
+    user1 = User(username='victor', email="victor@localhost.com", password="Password-123")
+    user2 = User(username='jhon', email="jhon@localhost.com", password="Password-123")
+    user3 = User(username='bob', email="bob@localhost.com", password="Password-123")
+    db.session.add(user1)
+    db.session.add(user2)
+    db.session.add(user3)
+    db.session.commit()
+
+    post1 = Post(title='Blog Post 1', content='First post content', author=user1)
+    post2 = Post(title='Blog Post 2', content='Second post content', author=user2)
+    post3 = Post(title='Blog Post 3', content='Third post content', author=user3)
+    db.session.add(post1)
+    db.session.add(post2)
+    db.session.add(post3)
+    db.session.commit()
+
+    print(User.query.all())
+    print(Post.query.all())
 
 if __name__ == '__main__':
     app.run(debug=True)
